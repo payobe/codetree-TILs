@@ -29,6 +29,7 @@ vector<People>peopleVec;
 
 ll findPath(ll who) {
 	People tp = peopleVec[who];
+
 	vector<vector<ll>>tv = vector<vector<ll>>(n + 1, vector<ll>(n + 1));
 	for (ll i = 1; i <= n; i++)
 		for (ll j = 1; j <= n; j++)
@@ -37,6 +38,7 @@ ll findPath(ll who) {
 	queue<pair<ll, ll>>que;
 	que.push({ tp.pr,tp.pc });
 	tv[tp.pr][tp.pc] = 4;
+
 	while (!que.empty()) {
 		pair<ll, ll>tpll = que.front();
 		que.pop();
@@ -74,13 +76,14 @@ void goMove() {
 	for (ll i = 1; i <= m; i++) {
 		if (peopleVec[i].isFinish == 1)continue;
 		if (i >= turn)continue;
+
 		ll direction = findPath(i);
 		peopleVec[i].r += dr[direction];
 		peopleVec[i].c += dc[direction];
 	}
 }
 
-void checkArrive() {// done
+void checkArrive() {
 	for (ll i = 1; i <= m; i++) {
 		if (peopleVec[i].isFinish == 1)continue;
 		if (i >= turn)continue;
@@ -96,6 +99,7 @@ void checkArrive() {// done
 ll findDistance(ll who) {
 	Base tbase = baseVec[who];
 	People tp = peopleVec[turn];
+
 	vector<vector<ll>>tv = vector<vector<ll>>(n + 1, vector<ll>(n + 1));
 	for (ll i = 1; i <= n; i++)
 		for (ll j = 1; j <= n; j++)
@@ -104,6 +108,7 @@ ll findDistance(ll who) {
 	queue<pair<ll, ll>>que;
 	que.push({ tp.pr,tp.pc });
 	tv[tp.pr][tp.pc] = 0;
+
 	while (!que.empty()) {
 		pair<ll, ll>tpll = que.front();
 		que.pop();
@@ -112,19 +117,25 @@ ll findDistance(ll who) {
 		ll c = tpll.second;
 		ll dist = tv[r][c];
 
-		if (r == tbase.r && c == tbase.c)break;
-
+		bool trg = 0;
 		for (ll i = 3; i >= 0; i--) {
 			ll tr = r + dr[i];
 			ll tc = c + dc[i];
 
 			if (tr <= 0 || n < tr || tc <= 0 || n < tc)continue;
+			if (tr == tbase.r && tc == tbase.c) {
+				tv[tr][tc] = dist + 1;
+				trg = 1;
+				break;
+			}
+
 			if (canPass[tr][tc] == 0)continue;
 			if (tv[tr][tc] != -1)continue;
 
 			tv[tr][tc] = dist+1;
 			que.push({ tr,tc });
 		}
+		if (trg == 1)break;
 	}
 	return tv[tbase.r][tbase.c];
 }
@@ -155,8 +166,13 @@ void inBase() {
 		forSort.push_back(tbase);
 	}
 	sort(forSort.begin(), forSort.end(), cmp);
-
-	Base result = forSort[0];
+	ll ti = -1;
+	for (ll i = 0; i < forSort.size(); i++) {
+		if (forSort[i].dist == -1)continue;
+		ti = i;
+		break;
+	}
+	Base result = forSort[ti];
 	baseVec[result.number].can = 0;
 	peopleVec[turn].r = result.r;
 	peopleVec[turn].c = result.c;
