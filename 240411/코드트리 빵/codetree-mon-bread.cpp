@@ -36,8 +36,8 @@ ll findPath(ll who) {
 			tv[i][j] = -1;
 	
 	queue<pair<ll, ll>>que;
-	que.push({ tp.pr,tp.pc });
-	tv[tp.pr][tp.pc] = 4;
+	que.push({ tp.r,tp.c });
+	tv[tp.r][tp.c] = 4;
 
 	while (!que.empty()) {
 		pair<ll, ll>tpll = que.front();
@@ -46,30 +46,30 @@ ll findPath(ll who) {
 		ll r = tpll.first;
 		ll c = tpll.second;
 
-		
-		ll trg = 0;
-		for (ll i = 3; i >= 0; i--) {
+		for (ll i = 0; i < 4; i++) {
 			ll tr = r + dr[i];
 			ll tc = c + dc[i];
 
 			if (tr <= 0 || n < tr || tc <= 0 || n < tc)continue;
 
-			if (tr == tp.r && tc == tp.c) {
-				tv[tr][tc] = i;
-				trg = 1;
-				break;
-			}
 			if (canPass[tr][tc] == 0)continue;
 			if (tv[tr][tc] != -1)continue;
 
 			tv[tr][tc] = i;
 			que.push({ tr,tc });
 		}
-		if (trg == 1)break;
 	}
-	ll ret = tv[tp.r][tp.c];
-	ret = 3 - ret;
-	return ret;
+	ll r = tp.pr; ll c = tp.pc;
+	while (1) {
+		ll dir = tv[r][c];
+		dir = 3 - dir;
+		r += dr[dir];
+		c += dc[dir];
+		
+		if (r == tp.r && c == tp.c) {
+			return 3 - dir;
+		}
+	}
 }
 
 void goMove() {
@@ -106,8 +106,8 @@ ll findDistance(ll who) {
 			tv[i][j] = -1;
 
 	queue<pair<ll, ll>>que;
-	que.push({ tp.pr,tp.pc });
-	tv[tp.pr][tp.pc] = 0;
+	que.push({ tbase.r,tbase.c });
+	tv[tbase.r][tbase.c] = 0;
 
 	while (!que.empty()) {
 		pair<ll, ll>tpll = que.front();
@@ -117,17 +117,12 @@ ll findDistance(ll who) {
 		ll c = tpll.second;
 		ll dist = tv[r][c];
 
-		bool trg = 0;
-		for (ll i = 3; i >= 0; i--) {
+
+		for (ll i = 0; i <4; i++) {
 			ll tr = r + dr[i];
 			ll tc = c + dc[i];
 
 			if (tr <= 0 || n < tr || tc <= 0 || n < tc)continue;
-			if (tr == tbase.r && tc == tbase.c) {
-				tv[tr][tc] = dist + 1;
-				trg = 1;
-				break;
-			}
 
 			if (canPass[tr][tc] == 0)continue;
 			if (tv[tr][tc] != -1)continue;
@@ -135,9 +130,9 @@ ll findDistance(ll who) {
 			tv[tr][tc] = dist+1;
 			que.push({ tr,tc });
 		}
-		if (trg == 1)break;
+		
 	}
-	return tv[tbase.r][tbase.c];
+	return tv[tp.pr][tp.pc];
 }
 
 bool cmp(Base a, Base b) {
