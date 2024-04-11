@@ -49,12 +49,14 @@ ll findPath(ll who) {
 		for (ll i = 3; i >= 0; i--) {
 			ll tr = r + dr[i];
 			ll tc = c + dc[i];
+
+			if (tr <= 0 || n < tr || tc <= 0 || n < tc)continue;
+
 			if (tr == tp.r && tc == tp.c) {
 				tv[tr][tc] = i;
 				trg = 1;
 				break;
 			}
-			if (tr <= 0 || n < tr || tc <= 0 || n < tc)continue;
 			if (canPass[tr][tc] == 0)continue;
 			if (tv[tr][tc] != -1)continue;
 
