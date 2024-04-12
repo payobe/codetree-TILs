@@ -40,17 +40,29 @@ void move_all() {
     int from, to; cin >> from >> to;
     //링크드 업데이트
     // to의 맨앞과 from맨뒤 연결
-    prv[belt_start[to]] = belt_end[from];
-    nxt[belt_end[from]] = belt_start[to];
-    //to 밸트 start 업뎃
-    belt_start[to] = belt_start[from];
-    //from정보 삭제
-    belt_end[from] = 0;
-    belt_start[from] = 0;
-    //개수 update
-    belt_count[to] += belt_count[from];
-    belt_count[from] = 0;
+    if (belt_count[from] != 0) {
+        if (belt_count[to] != 0) {
+            prv[belt_start[to]] = belt_end[from];
+            nxt[belt_end[from]] = belt_start[to];
+            //to 밸트 start 업뎃
+            belt_start[to] = belt_start[from];
+            //from정보 삭제
+            belt_end[from] = 0;
+            belt_start[from] = 0;
+            //개수 update
+            belt_count[to] += belt_count[from];
+            belt_count[from] = 0;
+        }
+        else {
+            belt_count[to] = belt_count[from];
+            belt_start[to] = belt_start[from];
+            belt_end[to] = belt_end[from];
 
+            belt_count[from] = 0;
+            belt_start[from] = 0;
+            belt_end[from] = 0;
+        }
+    }
     //출력 to의 물건개수 출력
     cout << belt_count[to] << '\n';
 }
