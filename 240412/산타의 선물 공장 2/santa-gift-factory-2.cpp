@@ -7,7 +7,7 @@ using namespace std;
 vector<int>belt_count;// 개수
 vector<int>belt_start;// id
 vector<int>belt_end;  // id
-unordered_map<int, int>prv, nxt;// id
+vector<int>prv, nxt;// id
 
 int n, m, q;
 
@@ -18,6 +18,9 @@ void do_cunstruct() {
     belt_count = vector<int>(n+1);
     belt_start = vector<int>(n+1);
     belt_end = vector<int>(n+1);
+    prv = vector<int>(m + 1);
+    nxt = vector<int>(m + 1);
+
     for (int i = 1; i <= m; i++) {
         int ta; cin >> ta;
         ta;
