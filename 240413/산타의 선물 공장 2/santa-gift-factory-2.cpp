@@ -144,11 +144,12 @@ void move_split() {
             belt_start[to] = c;
         }
         else {
-            belt_start[to] = b;
+            belt_start[to] = c;
             belt_end[to] = target;
             nxt[target] = 0;
-            prv[b] = 0;
+            prv[c] = 0;
         }
+
         belt_count[to] += count;
         belt_count[from] -= count;
     }
