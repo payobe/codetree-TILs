@@ -123,7 +123,6 @@ void move_split() {
     //개수 카운트
     int count = belt_count[from] / 2;
     if (count != 0) {
-        belt_count[from] -= count;
         //개수 만큼 포문돌면서  //target 찾기
         int target = belt_start[from];
         for (int i = 1; i < count; i++) {
@@ -132,7 +131,9 @@ void move_split() {
         }
         // from에서 끊음
         int b = nxt[target];
-        prv[nxt[target]] = 0;
+        int c = belt_start[from];
+        prv[b] = 0;
+        belt_start[from] = b;
 
         if (belt_count[to] != 0) {
             // target과 연결
@@ -140,16 +141,16 @@ void move_split() {
             nxt[target] = a;
             prv[a] = target;
             // to start부분 없뎃
-            belt_start[to] = belt_start[from];
-            // from start 부분 업뎃
-            belt_start[from] = b;
+            belt_start[to] = c;
         }
         else {
-            belt_start[to] = belt_start[from];
+            belt_start[to] = b;
             belt_end[to] = target;
-            belt_start[from] = b;
+            nxt[target] = 0;
+            prv[b] = 0;
         }
         belt_count[to] += count;
+        belt_count[from] -= count;
     }
 
     cout << belt_count[to] << '\n';
