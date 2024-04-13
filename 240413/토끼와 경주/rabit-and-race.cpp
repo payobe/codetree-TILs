@@ -2,6 +2,7 @@
 #include<unordered_map>
 #include<algorithm>
 #include<vector>
+#include<set>
 
 #define ll long long
 
@@ -14,13 +15,35 @@ int n, m, p;
 struct Rabbit {
     int r, c;
     int dist;
-    int jump_count;
+    int jump_count =0;
     int id;
     int did = 0;
 };
 unordered_map<int, Rabbit>rabbit;
 unordered_map<int, int>point;
 unordered_map<int, int>is_visit;// 1이면 방문, 아닐 시 방문아님
+
+struct rcmp {
+    bool operator()(const Rabbit& a, const Rabbit& b)const {
+        if (a.jump_count < b.jump_count)return true;
+        if (a.jump_count > b.jump_count)return false;
+
+        if (a.r + a.c < b.r + b.c)return true;
+        if (a.r + a.c > b.r + b.c)return false;
+
+        if (a.r < b.r)return true;
+        if (a.r > b.r)return false;
+
+        if (a.c < b.c)return true;
+        if (a.c > b.c)return false;
+
+        if (a.id < b.id)return true;
+        if (a.id > b.id)return false;
+        return false;
+    }
+};
+
+set<Rabbit, rcmp>s;
 
 int sum = 0;
 vector<int>who;
@@ -39,26 +62,10 @@ void ready() {
         rabbit[who[i]].r = 1;
         rabbit[who[i]].c = 1;
         rabbit[who[i]].jump_count = 0;
+        s.insert(rabbit[who[i]]);
     }
 }
-bool cmp(int first, int second) {
-    Rabbit a = rabbit[first];
-    Rabbit b = rabbit[second];
-    if (a.jump_count < b.jump_count)return true;
-    if (a.jump_count > b.jump_count)return false;
 
-    if (a.r + a.c < b.r + b.c)return true;
-    if (a.r + a.c > b.r + b.c)return false;
-
-    if (a.r < b.r)return true;
-    if (a.r > b.r)return false;
-
-    if (a.c < b.c)return true;
-    if (a.c > b.c)return false;
-
-    if (a.id < b.id)return true;
-    if (a.id > b.id)return false;
-}
 bool cmp3(int first, int second) {
     Rabbit a = rabbit[first];
     Rabbit b = rabbit[second];
@@ -114,7 +121,7 @@ void give_plus(int cur, int p) {
 }
 //200 한번이라도 뽑혔는지 check?
 void game_start() {
-    int k, s; cin >> k >> s;
+    int k, sc; cin >> k >> sc;
 
     // 이니시
     int ws = who.size();
@@ -126,10 +133,7 @@ void game_start() {
 
     for (int i = 0; i < k; i++) {
         // 후보 선정
-        sort(who.begin(), who.end(), cmp);
-        int cur = who[0];
-        rabbit[cur].jump_count++;
-        rabbit[cur].did = 1;
+        int cur = (*s.begin()).id;
         // 후보 이동
         vector<pair<int, int>>vec;
         int r = rabbit[cur].r;
@@ -172,15 +176,19 @@ void game_start() {
         }
         sort(vec.begin(), vec.end(), cmp2);
         pair<int, int>w = vec[0];
+        s.erase(s.find(rabbit[cur]));
         rabbit[cur].r = w.first;
         rabbit[cur].c = w.second;
+        rabbit[cur].jump_count++;
+        rabbit[cur].did = 1;
+        s.insert(rabbit[cur]);
         int p = w.first + w.second;
 
         give_minus(cur, p);
     }
     // s 주기 진행
     sort(who.begin(), who.end(), cmp3);
-    give_plus(who[ws - 1], s);
+    give_plus(who[ws - 1], sc);
 }
 //300
 void change_dist() {
@@ -195,7 +203,7 @@ int get_point(int cur) {
     }
     return point[cur];
 }
-//400
+//400   
 void best_rabbit() {
     int ws = who.size();
     int ret = 0;
