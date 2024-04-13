@@ -55,6 +55,7 @@ void runner_move(int i) {
     else {
         dir = dir + 2;
         dir %= 4;
+        runner[i].direction = dir;
         tr = r + dr[dir];
         tc = c + dc[dir];
         if (tr != finder.r || tc != finder.c) {
@@ -62,7 +63,6 @@ void runner_move(int i) {
             runner[i].c = tc;
         }
     }
-    runner[i].direction = dir;
 }
 //main게임
 //러너 잡기
