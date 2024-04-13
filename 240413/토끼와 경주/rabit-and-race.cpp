@@ -18,6 +18,7 @@ struct Rabbit {
     int jump_count =0;
     int id;
 };
+
 unordered_map<int,int>did;
 unordered_map<int, Rabbit>rabbit;
 unordered_map<int, int>point;
@@ -67,9 +68,10 @@ void ready() {
    
 }
 
-bool cmp3(int first, int second) {
+bool cmp_3(int first, int second) {
     Rabbit a = rabbit[first];
     Rabbit b = rabbit[second];
+
     if (did[first] < did[second])return true;
     if (did[first] > did[second])return false;
 
@@ -84,6 +86,7 @@ bool cmp3(int first, int second) {
 
     if (a.id < b.id)return true;
     if (a.id > b.id)return false;
+    return false;
 }
 //범위 밖인지 체크
 bool is_range(int r, int c) {
@@ -132,7 +135,7 @@ void game_start() {
 
     // 게임진행
 
-    for (int i = 0; i < k; i++) {
+    for (int j = 0; j < k; j++) {
         // 후보 선정
         int cur = (*s.begin()).id;
         // 후보 이동
@@ -188,8 +191,12 @@ void game_start() {
         give_minus(cur, p);
     }
     // s 주기 진행
-    sort(who.begin(), who.end(), cmp3);
-    give_plus(who[ws - 1], sc);
+    int ti = 0;
+    for (int i = 1; i < ws; i++) {
+        if (cmp_3(ti, i))ti = i;
+    }
+    
+    give_plus(ti, sc);
 }
 //300
 void change_dist() {
