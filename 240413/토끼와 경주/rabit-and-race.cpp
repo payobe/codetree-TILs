@@ -193,10 +193,10 @@ void game_start() {
     // s 주기 진행
     int ti = 0;
     for (int i = 1; i < ws; i++) {
-        if (cmp_3(ti, i))ti = i;
+        if (cmp_3(who[ti], who[i]))ti = i;
     }
     
-    give_plus(ti, sc);
+    give_plus(who[ti], sc);
 }
 //300
 void change_dist() {
