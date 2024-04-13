@@ -125,6 +125,7 @@ void game_start() {
 
     // 이니시
     int ws = who.size();
+    s.clear();
     for (int i = 0; i < ws; i++) {
         rabbit[who[i]].did = 0;
         s.insert(rabbit[who[i]]);
