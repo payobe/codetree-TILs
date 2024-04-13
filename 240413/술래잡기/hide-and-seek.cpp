@@ -14,6 +14,7 @@ int fd[COUNT] = { 0,1,2,2,3,3,0,0,0,1,1,1,2,2,2,2,3,3,3,3,0,0,0,0,
 int n, m, h, k;
 int turn;
 int point = 0;
+int total;
 
 struct People {
     int r, c, direction, live;
@@ -61,6 +62,7 @@ void runner_move(int i) {
             runner[i].c = tc;
         }
     }
+    runner[i].direction = dir;
 }
 //main게임
 //러너 잡기
@@ -95,6 +97,7 @@ void game_start() {
     // 술래가 도망자잡기
     // 내칸 포함 3칸
     dir = next_dir;
+    finder.direction = dir;
     r = finder.r;
     c = finder.c;
     int tr = r;
@@ -114,6 +117,7 @@ void game_start() {
         catch_count += ret;
         tr += dr[dir];
         tc += dc[dir];
+        total -= ret;
 
     }
     // 점수 얻기(나무 안잡힘)// turn +1 해주셔야합니다
@@ -124,6 +128,7 @@ int main() {
     // 여기에 코드를 작성해주세요.
     cin >> n >> m >> h >> k;
     // 도망자, 술래, 나무 ,턴
+    total = m;
     runner = vector<People>(m);
     tree = vector<vector<int>>(n, vector<int>(n)); // r,c한칸씩 줄여서 
     finder = { n / 2,n / 2, 0 , 1 };
