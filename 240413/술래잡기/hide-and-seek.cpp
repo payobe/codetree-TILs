@@ -88,6 +88,7 @@ void game_start() {
     // 술래 턴
     // 술래 움직이기
     int dir = finder.direction;
+    can[finder.r][finder.c] = 1;
     finder.r += dr[dir];
     finder.c += dc[dir];
     int r = finder.r;
@@ -102,6 +103,7 @@ void game_start() {
         else {
             int tdir = dir + 1;
             tdir %= 4;
+
             if (!can[r + dr[tdir]][c + dc[tdir]]) {
                 next_dir = tdir;
             }
@@ -115,12 +117,14 @@ void game_start() {
             can = vector<vector<int>>(n, vector<int>(n));
         }
         else {
-            int tdir = dir + 3;
-            tdir %= 4;
-            if (!can[r + dr[tdir]][c + dc[tdir]]) {
-                next_dir = tdir;
+            int tr = r + dr[dir];
+            int tc = c + dc[dir];
+            if (is_range(tr, tc)&& can[tr][tc] == 0) {
+                next_dir = dir;
             }
-            else next_dir = dir;
+            else {
+                next_dir = (dir + 3) % 4;
+            }
         }
     }
     can[r][c] = 1;
