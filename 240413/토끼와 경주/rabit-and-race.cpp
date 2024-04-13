@@ -17,8 +17,8 @@ struct Rabbit {
     int dist;
     int jump_count =0;
     int id;
-    int did = 0;
 };
+unordered_map<int,int>did;
 unordered_map<int, Rabbit>rabbit;
 unordered_map<int, int>point;
 unordered_map<int, int>is_visit;// 1이면 방문, 아닐 시 방문아님
@@ -62,15 +62,16 @@ void ready() {
         rabbit[who[i]].r = 1;
         rabbit[who[i]].c = 1;
         rabbit[who[i]].jump_count = 0;
-       
+        s.insert(rabbit[who[i]]);
     }
+   
 }
 
 bool cmp3(int first, int second) {
     Rabbit a = rabbit[first];
     Rabbit b = rabbit[second];
-    if (a.did < b.did)return true;
-    if (a.did > b.did)return false;
+    if (did[first] < did[second])return true;
+    if (did[first] > did[second])return false;
 
     if (a.r + a.c < b.r + b.c)return true;
     if (a.r + a.c > b.r + b.c)return false;
@@ -125,10 +126,8 @@ void game_start() {
 
     // 이니시
     int ws = who.size();
-    s.clear();
     for (int i = 0; i < ws; i++) {
-        rabbit[who[i]].did = 0;
-        s.insert(rabbit[who[i]]);
+        did[who[i]] = 0;
     }
 
     // 게임진행
@@ -182,7 +181,7 @@ void game_start() {
         rabbit[cur].r = w.first;
         rabbit[cur].c = w.second;
         rabbit[cur].jump_count++;
-        rabbit[cur].did = 1;
+        did[cur] = 1;
         s.insert(rabbit[cur]);
         int p = w.first + w.second;
 
