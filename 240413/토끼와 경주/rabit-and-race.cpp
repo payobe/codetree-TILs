@@ -62,7 +62,7 @@ void ready() {
         rabbit[who[i]].r = 1;
         rabbit[who[i]].c = 1;
         rabbit[who[i]].jump_count = 0;
-        s.insert(rabbit[who[i]]);
+       
     }
 }
 
@@ -127,6 +127,7 @@ void game_start() {
     int ws = who.size();
     for (int i = 0; i < ws; i++) {
         rabbit[who[i]].did = 0;
+        s.insert(rabbit[who[i]]);
     }
 
     // 게임진행
