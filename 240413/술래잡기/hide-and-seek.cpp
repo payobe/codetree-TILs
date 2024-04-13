@@ -7,9 +7,8 @@ using namespace std;
 
 int dr[4] = { -1,0,1,0 };
 int dc[4] = { 0,1,0,-1 };
-int fd[COUNT] = { 0,1,2,2,3,3,0,0,0,1,1,1,2,2,2,2,3,3,3,3,0,0,0,0,
-2,2,2,2,1,1,1,1,0,0,0,0,3,3,3,2,2,2,1,1,0,0,3,2 };
-
+int is_forward = 1;
+vector<vector<int>>can;
 
 int n, m, h, k;
 int turn;
@@ -88,16 +87,48 @@ void game_start() {
     }
     // 술래 턴
     // 술래 움직이기
+    int dir = finder.direction;
+    finder.r += dr[dir];
+    finder.c += dc[dir];
     int r = finder.r;
     int c = finder.c;
-    int dir = fd[turn % COUNT];
-    int next_dir = fd[(turn + 1) % COUNT];
-    finder.r = r + dr[dir];
-    finder.c = c + dc[dir];
+    int next_dir;
+    if (is_forward) {
+        if (r == 0 && c == 0) {
+            is_forward = 0;
+            next_dir = 2;
+            can = vector<vector<int>>(n, vector<int>(n));
+        }
+        else {
+            int tdir = dir + 1;
+            tdir %= 4;
+            if (!can[r + dr[tdir]][c + dc[tdir]]) {
+                next_dir = tdir;
+            }
+            else next_dir = dir;
+        }
+    }
+    else {
+        if (r == (n/2) && c == (n/2)) {
+            is_forward = 1;
+            next_dir = 0;
+            can = vector<vector<int>>(n, vector<int>(n));
+        }
+        else {
+            int tdir = dir + 3;
+            tdir %= 4;
+            if (!can[r + dr[tdir]][c + dc[tdir]]) {
+                next_dir = tdir;
+            }
+            else next_dir = dir;
+        }
+    }
+    can[r][c] = 1;
+
     // 술래가 도망자잡기
     // 내칸 포함 3칸
-    dir = next_dir;
-    finder.direction = dir;
+    finder.direction = next_dir;
+    dir = finder.direction;
     r = finder.r;
     c = finder.c;
     int tr = r;
@@ -131,6 +162,7 @@ int main() {
     total = m;
     runner = vector<People>(m);
     tree = vector<vector<int>>(n, vector<int>(n)); // r,c한칸씩 줄여서 
+    can = vector<vector<int>>(n, vector<int>(n));
     finder = { n / 2,n / 2, 0 , 1 };
     for (int i = 0; i < m; i++) {
         int ta, tb, tc; cin >> ta >> tb >> tc;
@@ -141,9 +173,10 @@ int main() {
         tree[ta - 1][tb - 1] = 1;
     }
 
+    finder.direction = 0;
     for (int i = 0; i < k; i++) {
         turn = i;
-        game_start();
+            game_start();
     }
 
     cout << point;
